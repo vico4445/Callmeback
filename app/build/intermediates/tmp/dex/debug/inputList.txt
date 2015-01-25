@@ -1,1 +1,6 @@
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/classes/debug
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-c603a7bdd5d0cc16cb38da24969358f95ff28053.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-51bd5fb628a9e4f761c9dab962cd2503cc6e4695.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/classes-a9e0841b082319027eb80e653ac7627b60b020d8.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/classes-5f6d536dced5421dcecd78c052876ace26c084df.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/classes-18e2c6318bbf752de4090e294b56eeef4c5fc061.jar
