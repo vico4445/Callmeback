@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,9 +23,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
@@ -41,6 +46,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
 
     // Variables for Google Sign-In
     private static final int DIALOG_GET_GOOGLE_PLAY_SERVICES = 1;
+    private static final int REQ_SIGN_IN_REQUIRED = 55664;
+
 
     private static final int REQUEST_CODE_SIGN_IN = 1;
     private static final int REQUEST_CODE_GET_GOOGLE_PLAY_SERVICES = 2;
@@ -49,7 +56,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     private SignInButton mSignInButton;
     private View mSignOutButton;
     private View mRevokeAccessButton;
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient= null;
 
     private ProgressDialog mConnectionProgressDialog;
 
@@ -83,9 +90,8 @@ public class MainActivity extends Activity implements View.OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //Create model
-        secretary = new Secretary();
+        secretary = new Secretary(getApplicationContext());
 
         //Create CallReceiver and give it the model
         Receiver = new CallReceiver(secretary);
@@ -120,16 +126,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-        /*mPlusClient =new PlusClient.Builder(this, this, this).setActions(
-                        "http://schemas.google.com/AddActivity", "http://schemas.google.com/BuyActivity")
-                        .setScopes("PLUS_LOGIN") // Space separated list of scopes
-                        .build();        // Barre de progression à afficher si l'échec de connexion n'est pas résolu.
-*/
-        /*mPlusClient = new import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .build();*/
+
         mConnectionProgressDialog = new ProgressDialog(this);
         mConnectionProgressDialog.setMessage("Signing in...");
 
@@ -147,6 +144,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+        secretary.SynchronizeCalendar(this);
     }
 
     @Override
@@ -302,17 +300,27 @@ public class MainActivity extends Activity implements View.OnClickListener,
     @Override
     protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
         Log.d(LOG_TAG, "Button result");
-        if (requestCode == REQUEST_CODE_RESOLVE_ERR && responseCode == RESULT_OK) {
-            Log.d(LOG_TAG, "Button Ok");
-            mConnectionResult = null;
-            mGoogleApiClient.connect();
-        }
-        else {
-            if (responseCode == RESULT_CANCELED) {
-                Log.d(LOG_TAG, "Signed out");
-            } else {
-                Log.d(LOG_TAG, "Error during resolving recoverable error.");
-            }
+        switch (requestCode) {
+            case REQUEST_CODE_RESOLVE_ERR:
+                if (responseCode == RESULT_OK) {
+                    Log.d(LOG_TAG, "Button Ok");
+                    mConnectionResult = null;
+                    mGoogleApiClient.connect();
+                } else {
+                    if (responseCode == RESULT_CANCELED) {
+                        Log.d(LOG_TAG, "Signed out");
+                    } else {
+                        Log.d(LOG_TAG, "Error during resolving recoverable error.");
+                    }
+                }
+                break;
+
+            case REQ_SIGN_IN_REQUIRED:
+                if (responseCode == RESULT_OK) {
+                    RetrieveAccessToken();
+                } else {
+                    Log.d(LOG_TAG, "Error while solving token error");
+                }
         }
     }
 
@@ -323,24 +331,57 @@ public class MainActivity extends Activity implements View.OnClickListener,
         Person person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
         String currentPersonName = person != null
                 ? person.getDisplayName()
-                : "Unknown";
+                : "Unknow";
+        secretary.setUserAccount(mGoogleApiClient);
+        RetrieveAccessToken();
+
         Toast.makeText(this, currentPersonName + " is connected.", Toast.LENGTH_LONG).show();
         mSignInButton.setVisibility(View.INVISIBLE);
         mSignOutButton.setVisibility(View.VISIBLE);
     }
 
-//    @Override
-/*    public void onDisconnected() {
+    // Accessing google APIs
 
-        Log.d(LOG_TAG, "disconnected");
+    // Get token
+    public void RetrieveAccessToken() {
+        if (mGoogleApiClient != null){
+            String mAccountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+            RetrieveTokenTask Task = new RetrieveTokenTask();
+            Task.execute(mAccountName);
+        }
     }
 
-*/
+    private class RetrieveTokenTask extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected String doInBackground(String... params) {
+            String accountName = params[0];
+            String scopes = "oauth2:https://www.googleapis.com/auth/calendar";
+            //String scopes = "oauth2:googleapis.com/auth/plus";
+            Log.e(LOG_TAG, accountName);
 
+            String token = null;
+            try {
+                token = GoogleAuthUtil.getToken(getApplicationContext(), accountName, scopes);
+            } catch (IOException e) {
+                Log.e(LOG_TAG, e.getMessage());
+            } catch (UserRecoverableAuthException e) {
+                startActivityForResult(e.getIntent(), REQ_SIGN_IN_REQUIRED);
+            } catch (GoogleAuthException e) {
+                Log.e(LOG_TAG, e.getMessage());
+                Log.e(LOG_TAG, e.getMessage());
+            }
+            return token;
+        }
 
-
-
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            secretary.setToken(s);
+            Log.d(LOG_TAG, "Token :" + s);
+            //((TextView) findViewById(R.id.token_value)).setText("Token Value: " + s);
+        }
+    }
 
 }
 

@@ -1,6 +1,14 @@
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/classes/debug
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-c603a7bdd5d0cc16cb38da24969358f95ff28053.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/google-http-client-jackson2-1.18.0-rc-9183850adf408acc6634e4b03eba62d96d57e932.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/jsr305-1.3.9-03dcc9e2ea5bbf81024d6216e4634dd01570d996.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/google-oauth-client-1.18.0-rc-06364562ea5b65b2f7fbc404b32e0590eaf3f7c8.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/google-api-services-calendar-v3-rev114-1.19.1-42767f1a414e29a0aed973d7debb042759d70085.jar
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-51bd5fb628a9e4f761c9dab962cd2503cc6e4695.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/google-api-client-1.18.0-rc-cff46672bf494cf7003cc8c8bb633ff9f5968bf6.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/google-http-client-1.18.0-rc-9b8b6530009935684e9f60123b830f7e898e33f6.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/jackson-core-2.1.3-2f4cef4b0a92d4c495f32a4a44537eced32cd782.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/jackson-core-asl-1.9.11-21c25579bec9c3a32f6daa0c10511ebb9fb4c076.jar
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/classes-a9e0841b082319027eb80e653ac7627b60b020d8.jar
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/classes-5f6d536dced5421dcecd78c052876ace26c084df.jar
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/classes-18e2c6318bbf752de4090e294b56eeef4c5fc061.jar
