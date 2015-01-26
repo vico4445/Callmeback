@@ -37,4 +37,5 @@ dependencies {
     compile files('src/main/java/libs/google-api-client-1.18.0-rc.jar')
     compile files('src/main/java/libs/jackson-core-2.1.3.jar')
     compile files('src/main/java/libs/google-http-client-jackson2-1.18.0-rc.jar')
+    compile files('src/main/java/libs/guava-18.0.jar')
 }

@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +24,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -39,6 +45,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.PlusClient;
 import com.google.android.gms.plus.model.people.Person;
+import com.google.api.client.util.Charsets;
+import com.google.api.services.calendar.*;
+import com.google.common.io.CharStreams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MainActivity extends Activity implements View.OnClickListener,
@@ -145,6 +158,7 @@ public class MainActivity extends Activity implements View.OnClickListener,
         super.onStart();
         mGoogleApiClient.connect();
         secretary.SynchronizeCalendar(this);
+        //Calendar cal = new Calendar();
     }
 
     @Override
@@ -379,10 +393,92 @@ public class MainActivity extends Activity implements View.OnClickListener,
             super.onPostExecute(s);
             secretary.setToken(s);
             Log.d(LOG_TAG, "Token :" + s);
+
+            //Ask for datas
+            if (s != null){
+                String baseurl = "https://www.googleapis.com/calendar/v3/";
+                String paramurl = "calendars/victorlecointre45%40gmail.com/events";
+                //String paramurl = "calendars/victorlecointre45%40gmail.com/events?key={YOUR_API_KEY}";
+
+                try {
+                    sendGet GetTask = new sendGet();
+                    String[] getparam = {baseurl+paramurl,s};
+                    GetTask.execute(getparam);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d(LOG_TAG, "Get marche pas");
+                }
+            }
             //((TextView) findViewById(R.id.token_value)).setText("Token Value: " + s);
         }
     }
 
+    // HTTP GET request
+    private class sendGet extends AsyncTask<String, Void, String> {
+        //throws Exception
+        //(String url,String CLIENT_ID,String token)
+        @Override
+        protected String doInBackground(String... params) {
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            String resultJSON = null;
+            //String url = "http://www.google.com/search?q=mkyong";
+
+            URL obj = null;
+            try {
+                obj = new URL(params[0]);
+
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                // optional default is GET
+                con.setRequestMethod("GET");
+
+                //add request header
+                //con.setRequestProperty("X-GData-Client", CLIENT_ID);
+                con.setRequestProperty("Authorization", "Bearer "+ params[1]);
+
+                int responseCode = con.getResponseCode();
+                Log.i("Secretary", "Sending 'GET' request to URL : " + params[0]);
+                Log.i("Secretary", "Response Code : " + responseCode);
+
+                resultJSON = CharStreams.toString(new InputStreamReader(
+                        con.getInputStream(), Charsets.UTF_8));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return resultJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String resultJSON){
+            if (!TextUtils.isEmpty(resultJSON)) {
+                JSONArray resultArray;
+                try {
+                    resultArray = new JSONObject(resultJSON).getJSONArray("items");
+                    Log.i("Secretary", resultArray.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+      //  return new JSONObject(resultJSON);
+
+        /*BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        //print result
+        System.out.println(response.toString());*/
+
+    }
 }
 
 

@@ -11,4 +11,5 @@
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/jackson-core-asl-1.9.11-21c25579bec9c3a32f6daa0c10511ebb9fb4c076.jar
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/classes-a9e0841b082319027eb80e653ac7627b60b020d8.jar
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/classes-5f6d536dced5421dcecd78c052876ace26c084df.jar
+/Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/guava-18.0-a64b47212e40428e2df17e8c01ffb1c44e36e9cc.jar
 /Users/victorlecointre/AndroidStudioProjects/CallMeBack/app/build/intermediates/pre-dexed/debug/classes-18e2c6318bbf752de4090e294b56eeef4c5fc061.jar

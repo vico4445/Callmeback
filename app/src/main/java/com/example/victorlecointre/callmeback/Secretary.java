@@ -11,6 +11,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 //import java.util.Calendar;
 import java.util.Date;
@@ -117,7 +119,7 @@ public class Secretary extends AbstractModel {
 
         // The clientId and clientSecret can be found in Google Developers Console
         String clientId = "973098072165-ohvcjsnq7ahf1om3e8mq7bsqa6lq941r.apps.googleusercontent.com";
-        String clientSecret = "YOUR_CLIENT_SECRET";
+        String clientSecret = "";
 
         // Or your redirect URL for web based applications.
         String redirectUrl = "urn:ietf:wg:oauth:2.0:oob";
@@ -152,6 +154,12 @@ public class Secretary extends AbstractModel {
         Calendar service = new Calendar.Builder(httpTransport, jsonFactory, credential)
                 .setApplicationName("YOUR_APPLICATION_NAME").build();
     }
+
+
+
+
+
+
 
 
     // test for synch
